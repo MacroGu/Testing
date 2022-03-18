@@ -48,7 +48,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	HWND hWnd = FindWindowEx(NULL, NULL, szWindowClass, NULL);
 
 	// Start the game and assert that initialisation was successful
-	assert(g_Game.Initialise());
+	bool bIsInitialize = g_Game.Initialise();
+	assert(bIsInitialize);
 
 	// Main message loop:
 	while (true)
