@@ -8,8 +8,10 @@ The test is expected to take around two hours, but you can spend as long as you 
 The following items are bugs that need to be fixed. Please consider the following bug reports and fix the bugs in the code.
 
 1. The ship begins with a random velocity, but it should begin stationary.
+the m_Velocity should be initializated by 0
 
 2. The suns are always in the same position each game, but they're supposed to be randomly positioned.
+ init with time seed
 
 3. The game sometimes crashes when the player is shooting.
 
@@ -19,10 +21,18 @@ Please add the following features:
 
 5. Gravity - The suns should apply gravity to the player ship and bullets.
 
+assume an easy way to calculate the gravity for ship and bullets,  as the suns are same for both ship and bullets, so we just consider the gravity of ship and bullet
+as the weight of ship and bullet is too small , so we just consider the gravity of sun 
+
+the gravity depends on the distance of ship and sun, or the distance of bullet and sun, 
+and all suns have affect gravity of each ship and bullet
+
+
+
+
 6. Asteroids - We would like to randomly spawn asteroids which the player can destroy by shooting them once.
 
 Finally, some peer review:
 
 7. Another coder has just finished writing the function Ship::Update in objects.cpp. Please review the code and provide feedback.
-
-When you've finished, please zip up the code and email it to your contact at Ninja Theory. Thanks for taking the time to do this test, and best of luck with your job application!
+after checking the bCollision , it call Explode(), but it would not remove from the g_Game.m_Ships, so it will be still existed not destroy
