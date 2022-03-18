@@ -156,6 +156,7 @@ void Game::Update(bool& outNeedRedraw)
 	// Update missiles
 	for (std::list<Missile*>::iterator itMissile = m_Missiles.begin(); itMissile != m_Missiles.end(); )
 	{
+		(*itMissile)->ApplyTheGravityFromSuns(m_Suns);
 		(*itMissile)->Update();
 
 		// Remove old missiles
@@ -172,6 +173,7 @@ void Game::Update(bool& outNeedRedraw)
 	// Update player ships
 	for (std::list<Ship*>::iterator itShip = m_Ships.begin(); itShip != m_Ships.end(); itShip++)
 	{
+		(*itShip)->ApplyTheGravityFromSuns(m_Suns);
 		(*itShip)->Update();
 	}
 

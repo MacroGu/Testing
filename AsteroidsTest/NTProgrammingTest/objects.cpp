@@ -13,6 +13,7 @@
 #include "game.h"
 #include "objects.h"
 #include "timer.h"
+#include <cmath>
 
 //--------------------------------------------------------------------------------------------------------------
 // CelestialBody
@@ -22,7 +23,25 @@ CelestialBody::CelestialBody(const NTPoint& position)
 {
 }
 
+//--------------------------------------------------------------------------------------------------------------
+// CelestialBody
+// calculate the gravity of all suns and apply it to velocity
+//--------------------------------------------------------------------------------------------------------------
+void CelestialBody::ApplyTheGravityFromSuns(const std::list<Sun*>& AllSuns)
+{
+	NTPoint resultGravity(0.f, 0.f);
+
+	for (auto OneSun : AllSuns)
+	{
+		NTPoint OneSunGravity = OneSun->GetGravityOfOutsidePoint(m_Position);
+		resultGravity = resultGravity + OneSunGravity;
+	}
+
+	m_Velocity = m_Velocity + resultGravity;
+}
+
 const int Sun::RADIUS = 15;
+const int Sun::GRAVITY = 1;
 
 //--------------------------------------------------------------------------------------------------------------
 // Sun
@@ -41,6 +60,21 @@ void Sun::Draw(HDC hdc)
 {
 	Ellipse(hdc, (int)m_Position.x - RADIUS, (int)m_Position.y - RADIUS, (int)m_Position.x + RADIUS, (int)m_Position.y + RADIUS);
 }
+
+//--------------------------------------------------------------------------------------------------------------
+// Gravity
+// calculate the gravity for the point outside the sun
+//--------------------------------------------------------------------------------------------------------------
+NTPoint Sun::GetGravityOfOutsidePoint(const NTPoint& point)
+{
+	NTPoint targetVector = m_Position - point;
+	float distance = targetVector.GetLength();
+	targetVector.Normalise();
+	// the distance if bigger , the gravity is smaller
+	return targetVector * GRAVITY / distance;
+}
+
+
 
 //--------------------------------------------------------------------------------------------------------------
 // Missile

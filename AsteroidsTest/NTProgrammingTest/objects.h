@@ -27,6 +27,7 @@ public:
 	virtual void Draw(HDC hdc) = 0;
 
 	NTPoint GetPosition() { return m_Position; }
+	void ApplyTheGravityFromSuns(const std::list<Sun*>& AllSuns);
 
 	NTPoint m_Position;
 	NTPoint m_Velocity;
@@ -43,8 +44,10 @@ public:
 	Sun(int x, int y);
 	virtual void Update() {}
 	virtual void Draw(HDC hdc);
+	NTPoint GetGravityOfOutsidePoint(const NTPoint& point);
 
 	static const int RADIUS;
+	static const int GRAVITY;
 };
 
 
@@ -85,4 +88,5 @@ public:
 
 	float m_Angle;
 	float m_TimeSinceLastShot;
+
 };
