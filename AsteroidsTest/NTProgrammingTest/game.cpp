@@ -154,15 +154,18 @@ void Game::Update(bool& outNeedRedraw)
 	m_Timer.Update();
 
 	// Update missiles
-	for (std::list<Missile*>::iterator itMissile = m_Missiles.begin(); itMissile != m_Missiles.end(); itMissile++)
+	for (std::list<Missile*>::iterator itMissile = m_Missiles.begin(); itMissile != m_Missiles.end(); )
 	{
 		(*itMissile)->Update();
 
 		// Remove old missiles
 		if ((*itMissile)->IsOutOfFuel())
 		{
-			m_Missiles.remove(*itMissile);
-			delete (*itMissile);
+			itMissile = m_Missiles.erase(itMissile);
+		}
+		else
+		{
+			++itMissile;
 		}
 	}
 
