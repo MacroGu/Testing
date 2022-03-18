@@ -16,6 +16,7 @@
 #include "game.h"
 #include "objects.h"
 #include "timer.h"
+#include <ctime>
 
 //-------------------------------------------------------------------------------------------------------------
 // Constants
@@ -63,6 +64,7 @@ Game::~Game()
 //--------------------------------------------------------------------------------------------------------------
 bool Game::Initialise()
 {
+	srand(time(NULL));
 	// Generate a random number of suns
 	int numberOfSuns = RandomRange(MIN_SUNS, MAX_SUNS);
 
