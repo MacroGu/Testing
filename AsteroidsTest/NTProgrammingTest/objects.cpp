@@ -41,7 +41,7 @@ void CelestialBody::ApplyTheGravityFromSuns(const std::list<Sun*>& AllSuns)
 }
 
 const int Sun::RADIUS = 15;
-const int Sun::GRAVITY = 1;
+const int Sun::GRAVITY = 0;
 
 //--------------------------------------------------------------------------------------------------------------
 // Sun
@@ -254,4 +254,40 @@ void Ship::Explode()
 	m_Position = NTPoint(float(((double)rand() / RAND_MAX) * 600 + 100), float(((double)rand() / RAND_MAX) * 400 + 100));
 	m_Velocity = NTPoint(0, 0);
 	m_Angle = 0.f;
+}
+
+const int Asteroids::RADIUS = 10;
+
+//--------------------------------------------------------------------------------------------------------------
+// Asteroids
+// Construct a Asteroids.  Let there be light.
+//--------------------------------------------------------------------------------------------------------------
+Asteroids::Asteroids(int x, int y)
+	: CelestialBody(NTPoint((float)x, (float)y))
+{
+}
+
+//--------------------------------------------------------------------------------------------------------------
+// Draw
+// Draw the Asteroids.
+//--------------------------------------------------------------------------------------------------------------
+void Asteroids::Draw(HDC hdc)
+{
+	Ellipse(hdc, (int)m_Position.x - RADIUS, (int)m_Position.y - RADIUS, (int)m_Position.x + RADIUS, (int)m_Position.y + RADIUS);
+}
+
+//--------------------------------------------------------------------------------------------------------------
+// destory
+// destory the Asteroids.
+//--------------------------------------------------------------------------------------------------------------
+bool Asteroids::CanDestory(const Missile* OneMissile)
+{
+	float distance = (OneMissile->m_Position - m_Position).GetLength();
+
+	if ((int)distance > RADIUS)
+	{
+		return false;
+	}
+
+	return true;
 }

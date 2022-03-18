@@ -20,6 +20,7 @@
 class Sun;
 class Missile;
 class Ship;
+class Asteroids;
 
 //--------------------------------------------------------------------------------------------------------------
 // Random
@@ -50,6 +51,7 @@ public:
 	std::list<Missile*> m_Missiles;
 	std::list<Sun*>     m_Suns;
 	std::list<Ship*>    m_Ships;
+	std::list<Asteroids*>     m_Asteroids;
 
 protected:
 	Ship*				m_LocalShip;

@@ -23,12 +23,16 @@
 //-------------------------------------------------------------------------------------------------------------
 static const int MIN_SUNS = 10;
 static const int MAX_SUNS = 25;
+static const int MIN_ASTEROIDS = 5;
+static const int MAX_ASTEROIDS = 10;
 static const int X_SAFEREGION_MIN = 100;
 static const int X_SAFEREGION_MAX = 1500;
 static const int Y_SAFEREGION_MIN = 100;
 static const int Y_SAFEREGION_MAX = 1000;
 static const int PLACE_ATTEMPTS_PER_SUN = 20;
+static const int PLACE_ATTEMPTS_PER_ASTEROIDS = 10;
 static const float MINIMUM_DISTANCE_BETWEEN_SUNS = 150.0f;
+static const float MINIMUM_DISTANCE_BETWEEN_ASTEROIDS= 50.0f;
 static const float DRAW_TIME = 0.05f;
 
 //--------------------------------------------------------------------------------------------------------------
@@ -56,6 +60,12 @@ Game::~Game()
               delete *itMissile;
        }
        m_Missiles.clear();
+
+	   for (std::list< Asteroids* >::iterator itAsteroids = m_Asteroids.begin(); itAsteroids != m_Asteroids.end(); itAsteroids++)
+	   {
+		   delete* itAsteroids;
+	   }
+	   m_Asteroids.clear();
 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -92,6 +102,38 @@ bool Game::Initialise()
 			{
 				// Found a safe position, so create the sun and break out of the attempt loop
 				m_Suns.push_back(new Sun(sunX, sunY));
+				break;
+			}
+		}
+	}
+
+	// Generate a random number of Asteroids
+	int numberOfAsteroids = RandomRange(MIN_ASTEROIDS, MAX_ASTEROIDS);
+
+	for (int AsteroidsIndex = 0; AsteroidsIndex < numberOfAsteroids; AsteroidsIndex++)
+	{
+		// Try to place each Asteroids a limited number of times, to ensure the function doesn't get stuck in an infinite loop
+		for (int attemptNumber = 0; attemptNumber < PLACE_ATTEMPTS_PER_ASTEROIDS; attemptNumber++)
+		{
+			// Generate a random position
+			int AsteroidsX = RandomRange(X_SAFEREGION_MIN, X_SAFEREGION_MAX);
+			int AsteroidsY = RandomRange(Y_SAFEREGION_MIN, Y_SAFEREGION_MAX);
+
+			// Check the position is safe
+			bool positionIsSafe = true;
+			for (std::list<Asteroids*>::iterator itAsteroids = m_Asteroids.begin(); itAsteroids != m_Asteroids.end(); itAsteroids++)
+			{
+				if (NTPoint(NTPoint((float)AsteroidsX, (float)AsteroidsY) - (*itAsteroids)->GetPosition()).GetLength() < MINIMUM_DISTANCE_BETWEEN_ASTEROIDS)
+				{
+					positionIsSafe = false;
+					break;
+				}
+			}
+
+			if (positionIsSafe)
+			{
+				// Found a safe position, so create the sun and break out of the attempt loop
+				m_Asteroids.push_back(new Asteroids(AsteroidsX, AsteroidsY));
 				break;
 			}
 		}
@@ -136,6 +178,13 @@ void Game::Draw(HDC hdc, PAINTSTRUCT* ps)
 		(*itShip)->Draw(hdc);
 	}
 
+	// Draw Asteroids
+	SelectObject(hdc, penBlue);
+	for (std::list<Asteroids*>::iterator itAsteroids = m_Asteroids.begin(); itAsteroids != m_Asteroids.end(); itAsteroids++)
+	{
+		(*itAsteroids)->Draw(hdc);
+	}
+
 	// Delete our pens
 	DeleteObject(penRed);
 	DeleteObject(penGreen);
@@ -159,6 +208,18 @@ void Game::Update(bool& outNeedRedraw)
 		(*itMissile)->ApplyTheGravityFromSuns(m_Suns);
 		(*itMissile)->Update();
 
+		for (std::list<Asteroids*>::iterator itAsteroids = m_Asteroids.begin(); itAsteroids != m_Asteroids.end(); )
+		{
+			if ((*itAsteroids)->CanDestory(*itMissile))
+			{
+				itAsteroids = m_Asteroids.erase(itAsteroids);
+			}
+			else
+			{
+				++itAsteroids;
+			}
+		}
+
 		// Remove old missiles
 		if ((*itMissile)->IsOutOfFuel())
 		{
@@ -168,6 +229,7 @@ void Game::Update(bool& outNeedRedraw)
 		{
 			++itMissile;
 		}
+
 	}
 
 	// Update player ships

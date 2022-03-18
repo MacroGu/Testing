@@ -90,3 +90,19 @@ public:
 	float m_TimeSinceLastShot;
 
 };
+
+//-------------------------------------------------------------------------------------------------------------
+// Asteroids 
+// spawn asteroids which the player can destroy by shooting them once.
+//-------------------------------------------------------------------------------------------------------------
+class Asteroids : public CelestialBody
+{
+public:
+	Asteroids(int x, int y);
+	virtual void Update() {}
+	virtual void Draw(HDC hdc);
+
+	static const int RADIUS;
+
+	bool CanDestory(const Missile* OneMissile);
+};
