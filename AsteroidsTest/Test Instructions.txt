@@ -1,0 +1,28 @@
+Instructions
+------------
+
+In the NTProgrammingTest folder, you'll find a Visual Studio 2015 solution containing a very simple game written in C++. For the following questions you'll have to modify the game to fix bugs and add features. If you don't own a copy of Visual Studio 2015 or later, you can download Visual C++ 2015 or 2017 for free from Microsoft. If you have any problems opening the solution, please let us know.
+
+The test is expected to take around two hours, but you can spend as long as you like and many people like to spend longer on the questions below. You may refer to any reference materials you think would be useful, e.g. MSDN, Google.
+
+The following items are bugs that need to be fixed. Please consider the following bug reports and fix the bugs in the code.
+
+1. The ship begins with a random velocity, but it should begin stationary.
+
+2. The suns are always in the same position each game, but they're supposed to be randomly positioned.
+
+3. The game sometimes crashes when the player is shooting.
+
+4. The game doesn't work when compiled in Release, but it works fine in Debug.
+
+Please add the following features:
+
+5. Gravity - The suns should apply gravity to the player ship and bullets.
+
+6. Asteroids - We would like to randomly spawn asteroids which the player can destroy by shooting them once.
+
+Finally, some peer review:
+
+7. Another coder has just finished writing the function Ship::Update in objects.cpp. Please review the code and provide feedback.
+
+When you've finished, please zip up the code and email it to your contact at Ninja Theory. Thanks for taking the time to do this test, and best of luck with your job application!
